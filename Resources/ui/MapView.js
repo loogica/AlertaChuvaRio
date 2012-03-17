@@ -1,7 +1,6 @@
 //MapView Component Constructor
 function MapView() {
-	APP_ID = "40ca7235f9510dc0f2f5712093ded3bf";
-    APP_SECRET = "gmo2d-hka0e-2vs6q";    
+	   
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
@@ -37,18 +36,26 @@ function MapView() {
                 
                 var r = json.results[i];
                 
-                var mountainView = Titanium.Map.createAnnotation({
+                var pin_image = "";
+                if (r.ilustration.icon == "http://riomidia.cor.rio.gov.br/camadas/pluviometros/_sem_chuva_nuvem.png") {
+                	pin_image = Titanium.Map.ANNOTATION_GREEN;
+                }
+                else{
+                	pin_image = Titanium.Map.ANNOTATION_RED;
+                };
+                
+                var annotation = Titanium.Map.createAnnotation({
                     latitude: r.geoResult.point.lat,
                     longitude: r.geoResult.point.lng,
                     title: r.name,
-                    subtitle: "fuckers",
-                    pincolor:Titanium.Map.ANNOTATION_RED,
+                    subtitle: r.taxonomies[0].value,
+                    pincolor: pin_image,
                     animate:true,
                     leftButton: '../images/appcelerator_small.png',
                     myid:i+1 // Custom property to uniquely identify this annotation.
                 }); 
                 
-                points.push(mountainView);
+                points.push(annotation);
             }
             
             self.addAnnotations(points);
