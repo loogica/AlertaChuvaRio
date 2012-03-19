@@ -1,7 +1,8 @@
 //MapView Component Constructor
 function MapView() {
 	APP_ID = "";
-    APP_SECRET = "";    
+    APP_SECRET = "";
+    
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
@@ -61,12 +62,12 @@ function MapView() {
                 
                 var r = json.results[i];
                 
-                var pin_image = "";
+                var image = "";
                 if (r.ilustration.icon == "http://riomidia.cor.rio.gov.br/camadas/pluviometros/_sem_chuva_nuvem.png") {
-                	pin_image = Titanium.Map.ANNOTATION_GREEN;
+                	image = '../images/greenrain.png';
                 }
                 else{
-                	pin_image = Titanium.Map.ANNOTATION_RED;
+                	image = '../images/redrain.png';
                 };
                 
                 var annotation = Titanium.Map.createAnnotation({
@@ -74,7 +75,7 @@ function MapView() {
                     longitude: r.geoResult.point.lng,
                     title: r.name,
                     subtitle: r.taxonomies[0].value,
-                    pincolor: pin_image,
+                    image: image,
                     animate:true,
                     rightButton: '../images/appcelerator_small.png',
                     myid:i+1 // Custom property to uniquely identify this annotation.
