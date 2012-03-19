@@ -6,6 +6,8 @@ function MapView() {
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
         "rest/meteorologia/pluviometros?format=json";
+        
+    Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
 	
 	//create object instance, a parasitic subclass of Observable
 	var self = Titanium.Map.createView({
@@ -18,6 +20,27 @@ function MapView() {
 	    userLocation:true,
 	    annotations:[]
 	});
+	
+	self.getLocation = function(){
+		//Get the current position and set it to the mapview
+		Titanium.Geolocation.getCurrentPosition(function(e){
+			if (e.error){
+				Ti.API.log('error: ' + JSON.stringify(e.error) );
+				alert('consertar localizacao no emulador');
+            	return;
+			}
+			else{
+		        var region = {
+		            latitude: e.coords.latitude,
+		            longitude: e.coords.longitude,
+		            animate: true,
+		            latitudeDelta: 0.35,
+		            longitudeDelta: 0.35
+		        };
+		        self.setLocation(region);
+		  }
+		});
+	}
     
 	Ti.API.debug(AUTH_URL);
 	
@@ -53,7 +76,7 @@ function MapView() {
                     subtitle: r.taxonomies[0].value,
                     pincolor: pin_image,
                     animate:true,
-                    leftButton: '../images/appcelerator_small.png',
+                    rightButton: '../images/appcelerator_small.png',
                     myid:i+1 // Custom property to uniquely identify this annotation.
                 }); 
                 

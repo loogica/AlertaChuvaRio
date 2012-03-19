@@ -22,9 +22,9 @@ function AppWindow() {
 	//home action bar
 	var actionBar = new ActionBarView({
 		buttons: {
-			checkin: {
-				title:'checkin',
-				width:80
+			eu: {
+				title:'Eu',
+				width:40
 			},
 			settings: {
 				icon:'/images/14-gear@2x.png',
@@ -37,62 +37,64 @@ function AppWindow() {
 	var mapView = new MapView();
 	self.add(mapView);
 	
-	// //main tab control
-	// var tabs = new TabStripView({
-		// viewArgs: {
-			// top:44
-		// },
-		// tabs: {
-			// stream: {
-				// title:L('updates', 'Stream'),
-				// icon:'/images/tabs/chat_white.png'
-			// },
-			// groups: {
-				// title:L('groups', 'Groups'),
-				// icon:'/images/tabs/group_white.png'
-			// },
-			// events: {
-				// title:L('events', 'Events'),
-				// icon:'/images/tabs/calendar_white.png'
-			// },
-			// leaders: {
-				// title:L('leaders', 'Leaders'),
-				// icon:'/images/tabs/badge_white.png'
-			// }
-		// }
-	// });
-	// self.add(tabs.viewProxy);
-// 	
-	// //create main app views
-	// var stream = new StreamView(), 
-		// groups = new GroupsView(), 
-		// events = new EventsView(), 
-		// leaders = new LeadersView();
-// 	
-	// var scroller = Ti.UI.createScrollableView({
-		// top:100,
-		// left:0,
-		// right:0,
-		// bottom:0,
-		// views:[stream, groups, events, leaders],
-		// showPagingControl:false
-	// });
-	// self.add(scroller);
-// 	
-	// scroller.addEventListener('scroll', function(e) {
-		// tabs.selectIndex(e.currentPage);
-	// });
-// 	
-// 	
-	// tabs.addEventListener('selected', function(e) {
-		// scroller.scrollToView(e.index);
-	// });
-// 	
-	// actionBar.addEventListener('buttonPress', function(e) {
-		// var Window = (e.id === 'checkin') ? require('/ui/CheckinWindow') : require('/ui/SettingsWindow');
-		// var w = new Window();
-		// w.open();
-	// });
+	/*
+	//main tab control
+		var tabs = new TabStripView({
+			viewArgs: {
+				top:44
+			},
+			tabs: {
+				stream: {
+					title:L('updates', 'Stream'),
+					icon:'/images/tabs/chat_white.png'
+				},
+				groups: {
+					title:L('groups', 'Groups'),
+					icon:'/images/tabs/group_white.png'
+				},
+				events: {
+					title:L('events', 'Events'),
+					icon:'/images/tabs/calendar_white.png'
+				},
+				leaders: {
+					title:L('leaders', 'Leaders'),
+					icon:'/images/tabs/badge_white.png'
+				}
+			}
+		});
+		self.add(tabs.viewProxy);
+		
+		//create main app views
+		var stream = new StreamView(), 
+			groups = new GroupsView(), 
+			events = new EventsView(), 
+			leaders = new LeadersView();
+		
+		var scroller = Ti.UI.createScrollableView({
+			top:100,
+			left:0,
+			right:0,
+			bottom:0,
+			views:[stream, groups, events, leaders],
+			showPagingControl:false
+		});
+		self.add(scroller);
+		
+		scroller.addEventListener('scroll', function(e) {
+			tabs.selectIndex(e.currentPage);
+		});
+		
+		
+		tabs.addEventListener('selected', function(e) {
+			scroller.scrollToView(e.index);
+		});*/
+	
+	
+	actionBar.addEventListener('buttonPress', function(e) {
+		if (e.id == 'eu') {
+			mapView.getLocation();
+		}
+	});
 	
 	return self;
 }
