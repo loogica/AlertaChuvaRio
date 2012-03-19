@@ -1,8 +1,8 @@
-#appname: AlertaChuvaRio
-#publisher: diego
-#url: http://
-#image: appicon.png
-#appid: br.com.alertachuvario
-#desc: undefined
-#type: mobile
-#guid: 38ec99b6-7124-45cb-a453-651a709d9b82
+#appname:Community
+#publisher:diegodukao
+#url:http://developer.appcelerator.com
+#image:appicon.png
+#appid:br.com.alertachuvario
+#desc:not specified
+#type:ipad
+#guid:ff0908ad-1ac6-4f98-b032-19c783e095d5

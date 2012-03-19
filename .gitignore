@@ -1,6 +1,6 @@
 .DS_Store
 *.apk
-android.keystore
+*.keystore
 alertachuvario
 .*
 build/
