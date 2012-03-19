@@ -1,6 +1,7 @@
 //MapView Component Constructor
 function MapView() {
-	   
+	APP_ID = "";
+    APP_SECRET = "";    
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
@@ -8,9 +9,10 @@ function MapView() {
 	
 	//create object instance, a parasitic subclass of Observable
 	var self = Titanium.Map.createView({
+		top: 44,
 	    mapType: Titanium.Map.STANDARD_TYPE,
 	    region: {latitude:-22.977675726196445, longitude:-43.24390411376953, 
-	            latitudeDelta:0.01, longitudeDelta:0.01},
+	            latitudeDelta:0.35, longitudeDelta:0.35},
 	    animate:true,
 	    regionFit:true,
 	    userLocation:true,
