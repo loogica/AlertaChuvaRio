@@ -1,7 +1,7 @@
 //MapView Component Constructor
 function MapView() {
-	APP_ID = "";
-    APP_SECRET = "";
+	APP_ID = "40ca7235f9510dc0f2f5712093ded3bf";
+    APP_SECRET = "gmo2d-hka0e-2vs6q";
     
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
@@ -73,7 +73,7 @@ function MapView() {
                 var annotation = Titanium.Map.createAnnotation({
                     latitude: r.geoResult.point.lat,
                     longitude: r.geoResult.point.lng,
-                    title: r.name,
+                    title: r.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
                     subtitle: r.taxonomies[0].value,
                     image: image,
                     animate:true,
