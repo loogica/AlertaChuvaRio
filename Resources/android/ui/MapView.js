@@ -89,17 +89,49 @@ function MapView() {
                     rightButton: '../images/appcelerator_small.png',
                     myid:i+1 // Custom property to uniquely identify this annotation.
                 }); 
-                
                 points.push(annotation);
             }
-            
             self.addAnnotations(points);
-            
         }
-        
         req2.send();
-    	    
 	}
+	
+	self.addEventListener('click', function(evt) {
+        //is rightbutton clicked?
+        if (evt.clicksource == 'rightPane') {
+            Titanium.API.info('Right button clicked');
+            //add code for button click activity here
+        };
+     
+        // custom annotation attribute?
+        var myid = (evt.annotation.myid)?evt.annotation.myid:-1;
+        Titanium.API.info('Anotation id = ' + myid);
+     
+        //leftbutton clicked?
+        if (evt.clicksource == 'leftButton') {
+            Titanium.API.info('Leftbutton clicked on annotation: ' + myid);
+            //add code for button click activity here
+        };
+    });
+    
+    Titanium.App.addEventListener('sync_information', function(data) {
+        Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    });
+    
+    
+    
+    SYNC_SERVICE_URL = "background_task.js";
+    
+    var intent = Titanium.Android.createServiceIntent({
+        url: SYNC_SERVICE_URL
+    });
+    intent.putExtra('interval', 60 * 1000);
+    Titanium.Android.startService(intent);
+
+    //var intent = Ti.Android.createServiceIntent({
+    //    url: acs.app.services.SYNC_SERVICE_URL
+    //});
+    //Ti.Android.stopService(intent);  
 	
 	request.onerror = function(response) {
 	    alert(this);

@@ -16,7 +16,7 @@ function ActionBarView(args) {
 		},theme.headerText)));
 	}
 	else {
-		self.add(new ui.ImageView('/images/appc_white.png', {
+		self.add(new ui.ImageView('/images/logo.png', {
 			left:5
 		}));
 	}

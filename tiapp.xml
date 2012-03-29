@@ -24,6 +24,7 @@
     <navbar-hidden>true</navbar-hidden>
     <analytics>true</analytics>
     <guid>ff0908ad-1ac6-4f98-b032-19c783e095d5</guid>
+
     <iphone>
         <orientations device="iphone">
             <orientation>Ti.UI.PORTRAIT</orientation>
@@ -46,6 +47,9 @@
 	        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	        <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
         </manifest>
+        <services>
+            <service type="interval" url="background_task.js"/>
+        </services>
     </android>
     <modules/>
 </ti:app>
