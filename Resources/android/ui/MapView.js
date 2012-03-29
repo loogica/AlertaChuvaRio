@@ -70,11 +70,20 @@ function MapView() {
                 	image = '../images/redrain.png';
                 };
                 
+                var history_pattern = /[0-9]*.[0-9]* mm/g;
+                var history = r.description.text.match(history_pattern);
+                var history_text = "1h: " + history[1] + ' | 4hs: ' + history[2] + '\n24hs: ' + history[3] + ' | 96hs ' + history[4];
+                
+                var situation_pattern = /Situação em [0-9]*\/[0-9]*\/[0-9]* - [0-9]*:[0-9]*/gi;
+                var situation = r.description.text.match(situation_pattern);
+                
+                var subtitle = r.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
+                
                 var annotation = Titanium.Map.createAnnotation({
                     latitude: r.geoResult.point.lat,
                     longitude: r.geoResult.point.lng,
                     title: r.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
-                    subtitle: r.taxonomies[0].value,
+                    subtitle: subtitle,
                     image: image,
                     animate:true,
                     rightButton: '../images/appcelerator_small.png',
