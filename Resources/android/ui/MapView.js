@@ -1,8 +1,6 @@
 //MapView Component Constructor
 function MapView() {
-	APP_ID = "40ca7235f9510dc0f2f5712093ded3bf";
-    APP_SECRET = "gmo2d-hka0e-2vs6q";
-    
+
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
@@ -79,6 +77,16 @@ function MapView() {
                 
                 var subtitle = r.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
                 
+                var rview = Titanium.UI.createView({
+                       backgroundColor:'red',
+                       width:50,
+                       height:50
+                }); 
+                
+                rview.add(Titanium.UI.createLabel({
+                    text: 'Meu Local'
+                }));    
+                
                 var annotation = Titanium.Map.createAnnotation({
                     latitude: r.geoResult.point.lat,
                     longitude: r.geoResult.point.lng,
@@ -86,7 +94,8 @@ function MapView() {
                     subtitle: subtitle,
                     image: image,
                     animate:true,
-                    rightButton: '../images/appcelerator_small.png',
+                    //rightButton: '../images/appcelerator_small.png',
+                    leftView: rview,
                     myid:i+1 // Custom property to uniquely identify this annotation.
                 }); 
                 points.push(annotation);
@@ -101,8 +110,9 @@ function MapView() {
         if (evt.clicksource == 'rightPane') {
             Titanium.API.info('Right button clicked');
             //add code for button click activity here
-        };
-     
+            return false;
+        } 
+        
         // custom annotation attribute?
         var myid = (evt.annotation.myid)?evt.annotation.myid:-1;
         Titanium.API.info('Anotation id = ' + myid);
@@ -111,14 +121,12 @@ function MapView() {
         if (evt.clicksource == 'leftButton') {
             Titanium.API.info('Leftbutton clicked on annotation: ' + myid);
             //add code for button click activity here
-        };
+        }
     });
     
     Titanium.App.addEventListener('sync_information', function(data) {
         Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     });
-    
-    
     
     SYNC_SERVICE_URL = "background_task.js";
     
