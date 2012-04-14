@@ -36,6 +36,15 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
+		<activities>
+			<activity url="app.js">
+				<intent-filter>
+					<action android:name="android.intent.action.VIEW"/>
+					<category android:name="android.intent.category.DEFAULT"/>
+					<category android:name="android.intent.category.BROWSABLE"/>
+				</intent-filter>
+			</activity>
+		</activities>
         <manifest>
             <supports-screens android:anyDensity="false"/>
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
