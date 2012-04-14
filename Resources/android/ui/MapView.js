@@ -46,6 +46,30 @@ function MapView() {
 	var HttpClient = require('services/HttpClient');
 	var request = new HttpClient('GET', AUTH_URL);
 	
+	//****************************************
+	var intent = Titanium.Android.createIntent({
+	    action: Titanium.Android.ACTION_MAIN,
+	    className: 'br.com.alertachuva.CommunityActivity', 
+	    packageName: 'br.com.alertachuva'
+	});	 
+	intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
+	 
+	var pending = Titanium.Android.createPendingIntent({
+	    activity: Ti.Android.currentActivity,
+	    intent: intent,
+	    type: Titanium.Android.PENDING_INTENT_FOR_ACTIVITY, 
+	    flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK
+	});
+	 
+	var notification = Titanium.Android.createNotification({
+	    contentIntent: pending,
+	    contentTitle: 'Chovendo!!',
+	    contentText: 'Pra cacete!',
+	    tickerText: "PQP!",
+	    when: new Date().getTime()
+	});
+	//****************************************
+	
 	request.onload = function(response) {
 	    token = this.getResponseHeader("X-Access-Token");
 	    
@@ -83,9 +107,15 @@ function MapView() {
                        height:50
                 }); 
                 
-                rview.add(Titanium.UI.createLabel({
-                    text: 'Meu Local'
-                }));    
+                var lable_local = Ti.UI.createLabel({
+                    text: 'Meu Local',
+                    local_id: i+1
+                });
+                lable_local.addEventListener("click", function(e) {
+                	Ti.API.debug("botao clicado: " + e.source.local_id);
+                });
+                
+                rview.add(lable_local);    
                 
                 var annotation = Titanium.Map.createAnnotation({
                     latitude: r.geoResult.point.lat,
@@ -104,28 +134,11 @@ function MapView() {
         }
         req2.send();
 	}
-	
-	self.addEventListener('click', function(evt) {
-        //is rightbutton clicked?
-        if (evt.clicksource == 'rightPane') {
-            Titanium.API.info('Right button clicked');
-            //add code for button click activity here
-            return false;
-        } 
-        
-        // custom annotation attribute?
-        var myid = (evt.annotation.myid)?evt.annotation.myid:-1;
-        Titanium.API.info('Anotation id = ' + myid);
-     
-        //leftbutton clicked?
-        if (evt.clicksource == 'leftButton') {
-            Titanium.API.info('Leftbutton clicked on annotation: ' + myid);
-            //add code for button click activity here
-        }
-    });
     
+
     Titanium.App.addEventListener('sync_information', function(data) {
         Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        Ti.Android.NotificationManager.notify(1, notification);
     });
     
     SYNC_SERVICE_URL = "background_task.js";
@@ -135,6 +148,7 @@ function MapView() {
     });
     intent.putExtra('interval', 60 * 1000);
     Titanium.Android.startService(intent);
+
 
     //var intent = Ti.Android.createServiceIntent({
     //    url: acs.app.services.SYNC_SERVICE_URL
