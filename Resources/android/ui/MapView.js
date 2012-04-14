@@ -1,6 +1,5 @@
 //MapView Component Constructor
 function MapView() {
-
     AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
                "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
     RAIN_URL = "http://api.riodatamine.com.br/" +
@@ -49,8 +48,8 @@ function MapView() {
 	//****************************************
 	var intent = Titanium.Android.createIntent({
 	    action: Titanium.Android.ACTION_MAIN,
-	    className: 'br.com.alertachuva.CommunityActivity', 
-	    packageName: 'br.com.alertachuva'
+	    url : 'app.js',
+        flags : Ti.Android.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Ti.Android.FLAG_ACTIVITY_SINGLE_TOP
 	});	 
 	intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
 	 
@@ -66,7 +65,8 @@ function MapView() {
 	    contentTitle: 'Chovendo!!',
 	    contentText: 'Pra cacete!',
 	    tickerText: "PQP!",
-	    when: new Date().getTime()
+	    when: new Date().getTime(),
+    	flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
 	});
 	//****************************************
 	
