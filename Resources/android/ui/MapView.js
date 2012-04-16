@@ -1,11 +1,16 @@
+Ti.include('/config.js');
+Ti.include('/services/backend.js');
+
+var initial_preferences = {
+    my_place: null
+};
+
+if (get_pref() == null) {
+    save_pref(initial_preferences);
+}
+
 //MapView Component Constructor
 function MapView() {
-    AUTH_URL = "http://api.riodatamine.com.br/rest/request-token?" +
-               "app-id=" + APP_ID + "&app-secret=" + APP_SECRET;
-    RAIN_URL = "http://api.riodatamine.com.br/" +
-        "rest/meteorologia/pluviometros?format=json";
-        
-    Titanium.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
 	
 	//create object instance, a parasitic subclass of Observable
 	var self = Titanium.Map.createView({
@@ -39,127 +44,121 @@ function MapView() {
 		  }
 		});
 	}
-    
-	Ti.API.debug(AUTH_URL);
 	
-	var HttpClient = require('services/HttpClient');
-	var request = new HttpClient('GET', AUTH_URL);
-	
-	//****************************************
-	var intent = Titanium.Android.createIntent({
-	    action: Titanium.Android.ACTION_MAIN,
-	    url : 'app.js',
-        flags : Ti.Android.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Ti.Android.FLAG_ACTIVITY_SINGLE_TOP
-	});	 
-	intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
-	 
-	var pending = Titanium.Android.createPendingIntent({
-	    activity: Ti.Android.currentActivity,
-	    intent: intent,
-	    type: Titanium.Android.PENDING_INTENT_FOR_ACTIVITY, 
-	    flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK
-	});
-	 
-	var notification = Titanium.Android.createNotification({
-	    contentIntent: pending,
-	    contentTitle: 'Chovendo!!',
-	    contentText: 'Pra cacete!',
-	    tickerText: "PQP!",
-	    when: new Date().getTime(),
-    	flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
-	});
-	//****************************************
-	
-	request.onload = function(response) {
-	    token = this.getResponseHeader("X-Access-Token");
-	    
-	    req2 = new HttpClient('GET', RAIN_URL, token);
-
-        req2.onload = function(e) {
-            json = eval('(' + this.getResponseText() + ')');
-            
-            points = [];
-            
-            for (var i = 0; i < json.results.length; i++) {
-                
-                var r = json.results[i];
-                
-                var image = "";
-                if (r.ilustration.icon == "http://riomidia.cor.rio.gov.br/camadas/pluviometros/_sem_chuva_nuvem.png") {
-                	image = '../images/greenrain.png';
-                }
-                else{
-                	image = '../images/redrain.png';
-                };
-                
-                var history_pattern = /[0-9]*.[0-9]* mm/g;
-                var history = r.description.text.match(history_pattern);
-                var history_text = "1h: " + history[1] + ' | 4hs: ' + history[2] + '\n24hs: ' + history[3] + ' | 96hs ' + history[4];
-                
-                var situation_pattern = /Situação em [0-9]*\/[0-9]*\/[0-9]* - [0-9]*:[0-9]*/gi;
-                var situation = r.description.text.match(situation_pattern);
-                
-                var subtitle = r.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
-                
-                var rview = Titanium.UI.createView({
-                       backgroundColor:'red',
-                       width:50,
-                       height:50
-                }); 
-                
-                var lable_local = Ti.UI.createLabel({
-                    text: 'Meu Local',
-                    local_id: i+1
-                });
-                lable_local.addEventListener("click", function(e) {
-                	Ti.API.debug("botao clicado: " + e.source.local_id);
-                });
-                
-                rview.add(lable_local);    
-                
-                var annotation = Titanium.Map.createAnnotation({
-                    latitude: r.geoResult.point.lat,
-                    longitude: r.geoResult.point.lng,
-                    title: r.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
-                    subtitle: subtitle,
-                    image: image,
-                    animate:true,
-                    //rightButton: '../images/appcelerator_small.png',
-                    leftView: rview,
-                    myid:i+1 // Custom property to uniquely identify this annotation.
-                }); 
-                points.push(annotation);
-            }
-            self.addAnnotations(points);
+	function create_map_annotation(i, region) {
+	    var image = "";
+        if (region.ilustration.icon == "http://riomidia.cor.rio.gov.br/camadas/pluviometros/_sem_chuva_nuvem.png") {
+            image = '../images/greenrain.png';
+        } else{
+            image = '../images/redrain.png';
         }
-        req2.send();
-	}
-    
+        
+        var history_pattern = /[0-9]*.[0-9]* mm/g;
+        var history = region.description.text.match(history_pattern);
+        var history_text = "1h: " + history[1] + ' | 4hs: ' + history[2] + '\n24hs: ' + history[3] + ' | 96hs ' + history[4];
+        
+        var situation_pattern = /Situação em [0-9]*\/[0-9]*\/[0-9]* - [0-9]*:[0-9]*/gi;
+        var situation = region.description.text.match(situation_pattern);
+        
+        var subtitle = region.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
+        
+        var rview = Titanium.UI.createView({
+               backgroundColor:'red',
+               width:50,
+               height:50
+        }); 
+        
+        var lable_local = Ti.UI.createLabel({
+            text: 'Meu Local',
+            local_id: i+1,
+            latitude: region.geoResult.point.lat,
+            longitude: region.geoResult.point.lng,
+            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', '')
+        });
+        
+        lable_local.addEventListener("click", function(e) {
+            Ti.API.debug("botao clicado: " + e.source.local_id);
+            
+            preferences = get_pref();
+            preferences['my_place'] = {};
+            
+            preferences['my_place']['name'] = e.source.title;
+            preferences['my_place']['id'] = e.source.local_id;
+            preferences['my_place']['latitude'] = e.source.latitude;
+            preferences['my_place']['longitude'] = e.source.longitude;
+            
+            save_pref(preferences);
+            
+        });
+        
+        rview.add(lable_local);    
+        
+        var annotation = Titanium.Map.createAnnotation({
+            latitude: region.geoResult.point.lat,
+            longitude: region.geoResult.point.lng,
+            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            subtitle: subtitle,
+            image: image,
+            animate:true,
+            //rightButton: '../images/appcelerator_small.png',
+            leftView: rview,
+            myid:i+1 // Custom property to uniquely identify this annotation.
+        }); 
+        
+        return annotation;
+	};
+	   
+	get_info_and_run(self, create_map_annotation, function(points) {
+	    self.addAnnotations(points);
+	});
 
     Titanium.App.addEventListener('sync_information', function(data) {
         Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        Ti.Android.NotificationManager.notify(1, notification);
+        
+        //chuva e alagamento
+        if (data && data.is_raining && data.has_flood) {
+            
+        } else if (data && data.is_raining) { //somente chuva
+            
+            //TODO finish this!
+            
+            //****************************************
+            var intent = Titanium.Android.createIntent({
+                action: Titanium.Android.ACTION_MAIN,
+                url : 'app.js',
+                flags : Ti.Android.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Ti.Android.FLAG_ACTIVITY_SINGLE_TOP
+            });  
+            intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
+             
+            var pending = Titanium.Android.createPendingIntent({
+                activity: Ti.Android.currentActivity,
+                intent: intent,
+                type: Titanium.Android.PENDING_INTENT_FOR_ACTIVITY, 
+                flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK
+            });
+             
+            var notification = Titanium.Android.createNotification({
+                contentIntent: pending,
+                contentTitle: data.is_raining.meta.info,
+                contentText: data.is_raining.meta.info_when[0],
+                tickerText: "Alerta de Chuva!",
+                when: new Date().getTime(),
+                flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
+            });
+            
+            Ti.Android.NotificationManager.notify(1, notification);
+            //****************************************
+            
+        }
+        
     });
-    
-    SYNC_SERVICE_URL = "background_task.js";
     
     var intent = Titanium.Android.createServiceIntent({
         url: SYNC_SERVICE_URL
     });
+    
     intent.putExtra('interval', 60 * 1000);
     Titanium.Android.startService(intent);
-
-
-    //var intent = Ti.Android.createServiceIntent({
-    //    url: acs.app.services.SYNC_SERVICE_URL
-    //});
-    //Ti.Android.stopService(intent);  
-	
-	request.onerror = function(response) {
-	    alert(this);
-	}
-	
-	request.send();
 	
 	return self;
 }
