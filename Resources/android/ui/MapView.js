@@ -73,7 +73,8 @@ function MapView() {
             local_id: i+1,
             latitude: region.geoResult.point.lat,
             longitude: region.geoResult.point.lng,
-            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', '')
+            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            annotation: null
         });
         
         lable_local.addEventListener("click", function(e) {
@@ -88,6 +89,10 @@ function MapView() {
             preferences['my_place']['longitude'] = e.source.longitude;
             
             save_pref(preferences);
+            
+            //var parent = e.source.getParent();
+            
+            self.deselectAnnotation(e.source.annotation)
             
         });
         
@@ -104,6 +109,8 @@ function MapView() {
             leftView: rview,
             myid:i+1 // Custom property to uniquely identify this annotation.
         }); 
+        
+        lable_local.annotation = annotation;
         
         return annotation;
 	};
