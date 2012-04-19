@@ -25,7 +25,7 @@ function process_region_info(i, region) {
     return region;    
 }
 
-if ([perf != null]) {
+if (pref != null) {
     get_info_and_run(null, process_region_info, function(points) {
         var data = {};
         
