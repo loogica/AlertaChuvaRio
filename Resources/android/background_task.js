@@ -25,23 +25,24 @@ function process_region_info(i, region) {
     return region;    
 }
 
-get_info_and_run(null, process_region_info, function(points) {
-    var data = {};
-    
-    var my_rain_points = _.filter(points, function(elem) {
-        return (elem.geoResult.point.lat == pref.my_place.latitude &&
-               elem.geoResult.point.lng == pref.my_place.longitude)
+if ([perf != null]) {
+    get_info_and_run(null, process_region_info, function(points) {
+        var data = {};
+        
+        var my_rain_points = _.filter(points, function(elem) {
+            return (elem.geoResult.point.lat == pref.my_place.latitude &&
+                   elem.geoResult.point.lng == pref.my_place.longitude)
+        });
+        
+        data['points'] = points;
+        
+        if (my_rain_points.length > 0) {
+            data['is_raining'] = my_rain_points[0];
+        }
+        
+        Ti.App.fireEvent('sync_information', data);
     });
-    
-    data['points'] = points;
-    
-    if (my_rain_points.length > 0) {
-        data['is_raining'] = my_rain_points[0];
-    }
-    
-    Ti.App.fireEvent('sync_information', data);
-});
-
+}
 
 
 
