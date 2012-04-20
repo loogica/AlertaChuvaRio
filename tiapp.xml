@@ -7,9 +7,9 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>1.8.2</sdk-version>
+    <sdk-version>2.0.1.GA2</sdk-version>
     <id>br.com.alertachuvario</id>
-    <name>Community</name>
+    <name>Alerta Chuva Rio</name>
     <version>1.0</version>
     <publisher>diegodukao</publisher>
     <url>http://developer.appcelerator.com</url>
@@ -36,24 +36,24 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-		<activities>
-			<activity url="app.js">
-				<intent-filter>
-					<action android:name="android.intent.action.VIEW"/>
-					<category android:name="android.intent.category.DEFAULT"/>
-					<category android:name="android.intent.category.BROWSABLE"/>
-				</intent-filter>
-			</activity>
-		</activities>
+        <activities>
+            <activity url="app.js">
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                </intent-filter>
+            </activity>
+        </activities>
         <manifest>
             <supports-screens android:anyDensity="false"/>
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	        <uses-permission android:name="android.permission.INTERNET"/>
-	        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	        <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
         </manifest>
         <services>
             <service type="interval" url="background_task.js"/>

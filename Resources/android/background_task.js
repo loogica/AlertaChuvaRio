@@ -1,6 +1,3 @@
-var service = Ti.Android.currentService;
-var intent = service.getIntent();
-
 Ti.include('/config.js');
 Ti.include('/services/backend.js');
 var _ = require('/lib/underscore')
@@ -43,6 +40,3 @@ if (pref != null) {
         Ti.App.fireEvent('sync_information', data);
     });
 }
-
-
-
