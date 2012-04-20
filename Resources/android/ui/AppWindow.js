@@ -25,10 +25,6 @@ function AppWindow() {
 			eu: {
 				title:'Eu',
 				width:40
-			},
-			settings: {
-				icon:'/images/14-gear@2x.png',
-				width:40
 			}
 		}
 	});

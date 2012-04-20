@@ -63,17 +63,18 @@ function MapView() {
         var subtitle = region.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
         
         var rview = Titanium.UI.createView({
-               backgroundColor:'red',
+               //backgroundColor:'red',
                width:50,
                height:50
         }); 
         
-        var lable_local = Ti.UI.createLabel({
-            text: 'Meu Local',
+        var lable_local = Ti.UI.createButton({
+            //text: 'Meu Local',
             local_id: i+1,
             latitude: region.geoResult.point.lat,
             longitude: region.geoResult.point.lng,
-            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            //title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            image: '/images/rain_icon.png',
             annotation: null
         });
         
@@ -132,7 +133,6 @@ function MapView() {
             subtitle: subtitle,
             image: image,
             animate:true,
-            //rightButton: '../images/appcelerator_small.png',
             leftView: rview,
             myid:i+1 // Custom property to uniquely identify this annotation.
         }); 
