@@ -24,6 +24,27 @@ function MapView() {
 	    annotations:[]
 	});
 	
+	self.setMapCenter = function(position, delta) {
+		if (delta) {
+			var region = {
+				latitude: position.latitude,
+				longitude: position.longitude,
+				animate: true,
+				latitudeDelta: delta.latitude,
+				longitudeDelta: delta.longitude
+			}
+		}
+		else {
+			var region = {
+				latitude: position.latitude,
+				longitude: position.longitude,
+				animate: true
+			}
+		}
+		
+		self.setLocation(region);
+	};
+	
 	self.getLocation = function(){
 		//Get the current position and set it to the mapview
 		Titanium.Geolocation.getCurrentPosition(function(e){
@@ -33,14 +54,15 @@ function MapView() {
             	return;
 			}
 			else{
-		        var region = {
-		            latitude: e.coords.latitude,
-		            longitude: e.coords.longitude,
-		            animate: true,
-		            latitudeDelta: 0.35,
-		            longitudeDelta: 0.35
-		        };
-		        self.setLocation(region);
+				var position = {
+					latitude: e.coords.latitude,
+					longitude: e.coords.longitude
+				};
+				var delta = {
+					latitude: 0.35,
+					longitude: 0.35
+				};
+				self.setMapCenter(position, delta);
 		  }
 		});
 	}
@@ -187,6 +209,16 @@ function MapView() {
             
         }
         
+    });
+    
+    self.addEventListener("click", function(e){
+    	if (e.clicksource == "pin") {
+    		var position = {
+    			latitude: e.annotation.latitude,
+    			longitude: e.annotation.longitude
+    		}
+    		self.setMapCenter(position);
+    	}
     });
     
     var intent = Titanium.Android.createServiceIntent({
