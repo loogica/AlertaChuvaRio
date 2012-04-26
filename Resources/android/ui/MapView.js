@@ -82,6 +82,15 @@ function MapView() {
         var situation_pattern = /Situação em [0-9]*\/[0-9]*\/[0-9]* - [0-9]*:[0-9]*/gi;
         var situation = region.description.text.match(situation_pattern);
         
+        if (situation == null) {
+        	situation_pattern = /Situação em [0-9]*-[0-9]*-[0-9]* [0-9]*:[0-9]*/gi;
+        	situation = region.description.text.match(situation_pattern);
+        }
+        
+        if (history[1] == null){
+        	history_text = ""
+        }
+        
         var subtitle = region.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
         
         var rview = Titanium.UI.createView({

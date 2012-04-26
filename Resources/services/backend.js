@@ -61,7 +61,7 @@ var get_info_and_run = function(map, process_region, process_points) {
     }
     
     auth_request.onerror = function(response) {
-        alert(this);
+        alert("Não foi possível acessar o servidor");
     }
     
     auth_request.send();
