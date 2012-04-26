@@ -5,9 +5,9 @@ var initial_preferences = {
     my_place: null
 };
 
-if (get_pref() == null) {
-    save_pref(initial_preferences);
-}
+
+
+
 
 //MapView Component Constructor
 function MapView() {
@@ -229,6 +229,24 @@ function MapView() {
     		self.setMapCenter(position);
     	}
     });
+    
+        
+    var pref = get_pref();
+    
+    if (pref == null) {
+        save_pref(initial_preferences);
+    } else {
+        //preferences['my_place']['latitude'] = e.source.latitude;
+        //preferences['my_place']['longitude'] = e.source.longitude;
+        var position = {
+            latitude: pref['my_place']['latitude'],
+            longitude: pref['my_place']['longitude']
+        }
+        self.setMapCenter(position);
+            
+    }
+    
+    
     
     var intent = Titanium.Android.createServiceIntent({
         url: SYNC_SERVICE_URL

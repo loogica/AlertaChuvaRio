@@ -17,7 +17,8 @@ function ActionBarView(args) {
 	}
 	else {
 		self.add(new ui.ImageView('/images/logo.png', {
-			left:5
+		    top: 5,
+			left:-25
 		}));
 	}
 	
