@@ -6,7 +6,7 @@ var initial_preferences = {
 };
 
 
-
+var raining = false;
 
 
 //MapView Component Constructor
@@ -154,41 +154,40 @@ function MapView() {
         Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         
         //chuva e alagamento
-        if (data && data.is_raining && data.has_flood) {
-            
-        } else if (data && data.is_raining) { //somente chuva
-            
-            //TODO finish this!
-            
-            //****************************************
-            var intent = Titanium.Android.createIntent({
-                action: Titanium.Android.ACTION_MAIN,
-                url : 'app.js',
-                flags : Ti.Android.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Ti.Android.FLAG_ACTIVITY_SINGLE_TOP
-            });  
-            intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
-             
-            var pending = Titanium.Android.createPendingIntent({
-                activity: Ti.Android.currentActivity,
-                intent: intent,
-                type: Titanium.Android.PENDING_INTENT_FOR_ACTIVITY, 
-                flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK,
-                icon: '/images/day-lightcloud-rain-icon.png'
-            });
-             
-            var notification = Titanium.Android.createNotification({
-                contentIntent: pending,
-                contentTitle: data.is_raining.meta.info,
-                contentText: data.is_raining.meta.info_when[0],
-                tickerText: "Alerta de Chuva!",
-                when: new Date().getTime(),
-                icon: '/images/day-lightcloud-rain-icon.png',
-                flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
-            });
-            
-            Ti.Android.NotificationManager.notify(1, notification);
-            //****************************************
-            
+        if (data && data.is_raining) { //somente chuva
+            if (!raining) {
+                //****************************************
+                var intent = Titanium.Android.createIntent({
+                    action: Titanium.Android.ACTION_MAIN,
+                    url : 'app.js',
+                    flags : Ti.Android.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Ti.Android.FLAG_ACTIVITY_SINGLE_TOP
+                });  
+                intent.addCategory(Titanium.Android.CATEGORY_LAUNCHER);
+                 
+                var pending = Titanium.Android.createPendingIntent({
+                    activity: Ti.Android.currentActivity,
+                    intent: intent,
+                    type: Titanium.Android.PENDING_INTENT_FOR_ACTIVITY, 
+                    flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK,
+                    icon: '/images/day-lightcloud-rain-icon.png'
+                });
+                 
+                var notification = Titanium.Android.createNotification({
+                    contentIntent: pending,
+                    contentTitle: data.is_raining.meta.info,
+                    contentText: data.is_raining.meta.info_when[0],
+                    tickerText: "Alerta de Chuva!",
+                    when: new Date().getTime(),
+                    icon: '/images/day-lightcloud-rain-icon.png',
+                    flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
+                });
+                
+                Ti.Android.NotificationManager.notify(1, notification);
+                //****************************************
+                raining = true;
+            }
+        } else {
+            raining = false;
         }
         
     });
