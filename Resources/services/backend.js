@@ -46,7 +46,13 @@ var get_info_and_run = function(map, process_region, process_points) {
         var token = this.getResponseHeader("X-Access-Token");
         var rain_request = new HttpClient('GET', RAIN_URL, token);
         rain_request.onload = function(e) {
-            var json = eval('(' + this.getResponseText() + ')');
+            try {
+                var json = eval('(' + this.getResponseText() + ')');    
+            } catch (Exception) {
+                process_points([]);
+                return;
+            }
+            
             var points = [];
             for (var i = 0; i < json.results.length; i++) {
                 var region = json.results[i];
