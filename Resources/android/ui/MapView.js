@@ -138,11 +138,18 @@ function MapView() {
         });
         
         rview.add(lable_local);    
-        
+        var title = region.name.replace('Pluviômetros (Alerta-Rio) -  ', '');
+        if (title == "Baia de Guanabara") {
+        	title = "";
+        	Ti.API.info(region.description.text);
+        	var title_pattern = /Estação\/Bacia:(.*)\/Baia de Guanabara/; 
+        	var title_array = region.description.text.match(title_pattern);
+        	title = title_array[1];
+        }
         var annotation = Titanium.Map.createAnnotation({
             latitude: region.geoResult.point.lat,
             longitude: region.geoResult.point.lng,
-            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            title: title,
             subtitle: subtitle,
             image: image,
             animate:true,
