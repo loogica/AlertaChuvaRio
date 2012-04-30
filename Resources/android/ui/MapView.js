@@ -213,18 +213,18 @@ function MapView() {
     
         
     var pref = get_pref();
-    
     if (pref == null) {
         save_pref(initial_preferences);
     } else {
         //preferences['my_place']['latitude'] = e.source.latitude;
         //preferences['my_place']['longitude'] = e.source.longitude;
-        var position = {
-            latitude: pref['my_place']['latitude'],
-            longitude: pref['my_place']['longitude']
-        }
-        self.setMapCenter(position);
-            
+        if (!pref['my_place'] == null){ 
+	        var position = {
+	            latitude: pref['my_place']['latitude'],
+	            longitude: pref['my_place']['longitude']
+	        }
+	        self.setMapCenter(position);
+	    }    
     }
     
     
