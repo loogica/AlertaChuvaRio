@@ -184,7 +184,7 @@ function MapView() {
                 var notification = Titanium.Android.createNotification({
                     contentIntent: pending,
                     contentTitle: data.is_raining.meta.info,
-                    contentText: data.is_raining.meta.info_when[0],
+                    contentText: "Chovendo em " + data.is_raining.name,
                     tickerText: "Alerta de Chuva!",
                     when: new Date().getTime(),
                     icon: '/images/day-lightcloud-rain-icon.png',
