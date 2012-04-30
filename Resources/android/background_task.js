@@ -13,8 +13,10 @@ function process_region_info(i, region) {
         region.meta.image = '../images/redrain.png';
     }
     
+    //***ISSO AQUI TÁ ERRADO*****
     var situation_pattern = /Situação em [0-9]*\/[0-9]*\/[0-9]* - [0-9]*:[0-9]*/gi;
     var situation = region.description.text.match(situation_pattern);
+    //****************************
     
     region.meta.info = region.taxonomies[0].value;
     region.meta.info_when = situation;
