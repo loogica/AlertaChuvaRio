@@ -218,7 +218,7 @@ function MapView() {
     } else {
         //preferences['my_place']['latitude'] = e.source.latitude;
         //preferences['my_place']['longitude'] = e.source.longitude;
-        if (!pref['my_place'] == null){ 
+        if (pref['my_place'] != null){ 
 	        var position = {
 	            latitude: pref['my_place']['latitude'],
 	            longitude: pref['my_place']['longitude']
