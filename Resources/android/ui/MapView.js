@@ -188,10 +188,9 @@ function MapView() {
                     flags: Titanium.Android.FLAG_ACTIVITY_NEW_TASK,
                     icon: '/images/day-lightcloud-rain-icon.png'
                 });
-                 
-                var ctitle = data.is_raining.meta.info;
-                var ctext = "Chove " + data.is_raining.meta.info +
-                            " - "+ data.is_raining.name;
+                
+                var ctitle = data.is_raining.meta.name;
+                var ctext = "Chove " + data.is_raining.meta.info;
                 
                 var notification = Titanium.Android.createNotification({
                     contentIntent: pending,
@@ -199,7 +198,7 @@ function MapView() {
                     contentText: ctext,
                     tickerText: "Alerta de Chuva!",
                     when: new Date().getTime(),
-                    //icon: '/images/rain_icon.png',
+                    //icon: 'rain_icon.png',
                     flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
                 });
                 
