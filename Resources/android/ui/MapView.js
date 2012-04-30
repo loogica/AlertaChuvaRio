@@ -69,11 +69,20 @@ function MapView() {
 	
 	function create_map_annotation(i, region) {
 	    var image = "";
-        if (region.ilustration.icon == "http://riomidia.cor.rio.gov.br/camadas/pluviometros/_sem_chuva_nuvem.png") {
-            image = '../images/greenrain.png';
-        } else{
-            image = '../images/redrain.png';
+	    var volume_string = region.taxonomies[0].value;
+	    var volume = parseFloat(volume_string.replace(" mm", ""));
+        if (volume == 0) {
+            image = '../images/norain.png';
         }
+        else if (volume <= 5){
+            image = '../images/yellowrain.png';
+        }
+        else if (volume <= 25) {
+        	image = '../images/orangerain.png';
+        }
+        else if (volume > 25) {
+        	image = '../images/redrain.png';
+        };
         
         var history_pattern = /[0-9]*.[0-9]* mm/g;
         var history = region.description.text.match(history_pattern);
@@ -91,7 +100,7 @@ function MapView() {
         	history_text = ""
         }
         
-        var subtitle = region.taxonomies[0].value + " (" + situation + ")" + '\n' + history_text;
+        var subtitle = volume_string + " (" + situation + ")" + '\n' + history_text;
         
         var rview = Titanium.UI.createView({
                //backgroundColor:'red',
@@ -175,7 +184,7 @@ function MapView() {
                 var notification = Titanium.Android.createNotification({
                     contentIntent: pending,
                     contentTitle: data.is_raining.meta.info,
-                    contentText: data.is_raining.meta.info_when[0],
+                    contentText: "Chovendo em " + data.is_raining.name,
                     tickerText: "Alerta de Chuva!",
                     when: new Date().getTime(),
                     icon: '/images/day-lightcloud-rain-icon.png',
@@ -204,18 +213,18 @@ function MapView() {
     
         
     var pref = get_pref();
-    
     if (pref == null) {
         save_pref(initial_preferences);
     } else {
         //preferences['my_place']['latitude'] = e.source.latitude;
         //preferences['my_place']['longitude'] = e.source.longitude;
-        var position = {
-            latitude: pref['my_place']['latitude'],
-            longitude: pref['my_place']['longitude']
-        }
-        self.setMapCenter(position);
-            
+        if (pref['my_place'] != null){ 
+	        var position = {
+	            latitude: pref['my_place']['latitude'],
+	            longitude: pref['my_place']['longitude']
+	        }
+	        self.setMapCenter(position);
+	    }    
     }
     
     

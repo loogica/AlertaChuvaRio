@@ -22,7 +22,7 @@ function process_region_info(i, region) {
     return region;    
 }
 
-if (pref != null) {
+if (pref != null && pref.my_place != null) {
     get_info_and_run(null, process_region_info, function(points) {
         var data = {};
         

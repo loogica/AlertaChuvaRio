@@ -37,6 +37,9 @@ var get_pref = function(data) {
     return get_object("preferences", "global");
 }
 
+var clean_pref = function() {
+	save_object("preferences", "global", {my_place: null});
+}
 
 var get_info_and_run = function(map, process_region, process_points) {
     var HttpClient = require('services/HttpClient');
