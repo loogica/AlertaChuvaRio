@@ -50,7 +50,7 @@ function MapView() {
 		Titanium.Geolocation.getCurrentPosition(function(e){
 			if (e.error){
 				Ti.API.log('error: ' + JSON.stringify(e.error) );
-				alert('consertar localizacao no emulador');
+				//alert('consertar localizacao no emulador');
             	return;
 			}
 			else{
@@ -71,17 +71,17 @@ function MapView() {
 	    var image = "";
 	    var volume_string = region.taxonomies[0].value;
 	    var volume = parseFloat(volume_string.replace(" mm", ""));
-        if (volume == 0) {
-            image = '../images/norain.png';
-        }
-        else if (volume <= 5){
-            image = '../images/yellowrain.png';
-        }
-        else if (volume <= 25) {
+	    if (volume > 25) {
+	    	image = '../images/redrain.png';
+	    }
+        else if (volume > 5) {
         	image = '../images/orangerain.png';
         }
-        else if (volume > 25) {
-        	image = '../images/redrain.png';
+        else if (volume > 0){
+            image = '../images/yellowrain.png';
+        }
+        else {
+            image = '../images/norain.png';
         };
         
         var history_pattern = /[0-9]*.[0-9]* mm/g;
@@ -114,7 +114,7 @@ function MapView() {
             latitude: region.geoResult.point.lat,
             longitude: region.geoResult.point.lng,
             //title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
-            image: '/images/rain_icon.png',
+            image: image,
             annotation: null
         });
         
