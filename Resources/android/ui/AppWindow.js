@@ -14,7 +14,7 @@ function AppWindow() {
 	//create base proxy object
 	var self = new ui.Window({
 		navBarHidden:true,
-		exitOnClose:false,
+		exitOnClose: true,
 		backgroundImage:'/images/back.png'
 	});
 	self.orientationModes = [Ti.UI.PORTRAIT];
@@ -23,8 +23,9 @@ function AppWindow() {
 	var actionBar = new ActionBarView({
 		buttons: {
 			eu: {
-				title:'Eu',
-				width:40
+				icon:'/images/me.png',
+				width:51,
+				heigh:51
 			}
 		}
 	});
@@ -32,6 +33,10 @@ function AppWindow() {
 	
 	var mapView = new MapView();
 	self.add(mapView);
+	
+	//self.addEventListener('android:back', function (e) {
+	//    self.hide();
+	//});
 
 	return self;
 }

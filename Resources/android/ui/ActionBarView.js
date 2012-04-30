@@ -46,8 +46,8 @@ function ActionBarView(args) {
 		}
 		else if (buttonData.icon) {
 			var btnImage = new ui.ImageView(buttonData.icon,{
-				height:20,
-				width:20
+				height:30,
+				width:30
 			});
 			button.add(btnImage);
 		}
