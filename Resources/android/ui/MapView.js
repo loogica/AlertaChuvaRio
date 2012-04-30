@@ -5,9 +5,8 @@ var initial_preferences = {
     my_place: null
 };
 
-
-var raining = false;
-
+raining = false;
+visible = false;
 
 //MapView Component Constructor
 function MapView() {
@@ -68,6 +67,7 @@ function MapView() {
 	}
 	
 	function create_map_annotation(i, region) {
+	    if (region.taxonomies) {
 	    var image = "";
 	    var volume_string = region.taxonomies[0].value;
 	    var volume = parseFloat(volume_string.replace(" mm", ""));
@@ -138,11 +138,19 @@ function MapView() {
         });
         
         rview.add(lable_local);    
-        
+
+        var title = region.name.replace('Pluviômetros (Alerta-Rio) -  ', '');
+        if (title == "Baia de Guanabara") {
+        	title = "";
+        	Ti.API.info(region.description.text);
+        	var title_pattern = /Estação\/Bacia:(.*)\/Baia de Guanabara/; 
+        	var title_array = region.description.text.match(title_pattern);
+        	title = title_array[1];
+        }
         var annotation = Titanium.Map.createAnnotation({
             latitude: region.geoResult.point.lat,
             longitude: region.geoResult.point.lng,
-            title: region.name.replace('Pluviômetros (Alerta-Rio) -  ', ''),
+            title: title,
             subtitle: subtitle,
             image: image,
             animate:true,
@@ -151,8 +159,10 @@ function MapView() {
         }); 
         
         lable_local.annotation = annotation;
-        
         return annotation;
+        }
+        
+        return null;
 	};
 	   
 	get_info_and_run(self, create_map_annotation, function(points) {
@@ -160,8 +170,6 @@ function MapView() {
 	});
 
     Titanium.App.addEventListener('sync_information', function(data) {
-        Titanium.API.info('Timer run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        
         //chuva e alagamento
         if (data && data.is_raining) { //somente chuva
             if (!raining) {
@@ -181,16 +189,21 @@ function MapView() {
                     icon: '/images/day-lightcloud-rain-icon.png'
                 });
                  
+                var ctitle = data.is_raining.meta.info;
+                var ctext = "Chove " + data.is_raining.meta.info +
+                            " - "+ data.is_raining.name;
+                
                 var notification = Titanium.Android.createNotification({
                     contentIntent: pending,
-                    contentTitle: data.is_raining.meta.info,
-                    contentText: "Chovendo em " + data.is_raining.name,
+                    contentTitle: ctitle,
+                    contentText: ctext,
                     tickerText: "Alerta de Chuva!",
                     when: new Date().getTime(),
-                    icon: '/images/day-lightcloud-rain-icon.png',
+                    //icon: '/images/rain_icon.png',
                     flags : Titanium.Android.ACTION_DEFAULT | Titanium.Android.FLAG_AUTO_CANCEL | Titanium.Android.FLAG_SHOW_LIGHTS
                 });
                 
+                Titanium.API.info('Notification run!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                 Ti.Android.NotificationManager.notify(1, notification);
                 //****************************************
                 raining = true;
@@ -233,9 +246,10 @@ function MapView() {
         url: SYNC_SERVICE_URL
     });
     
-    intent.putExtra('interval', 60 * 1000);
+    intent.putExtra('interval', 60 * 2000);
     Titanium.Android.startService(intent);
 	
+	visible = true;
 	return self;
 }
 
