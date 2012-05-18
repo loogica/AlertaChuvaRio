@@ -238,14 +238,12 @@ function MapView() {
 	        self.setMapCenter(position);
 	    }    
     }
-    
-    
-    
+
     var intent = Titanium.Android.createServiceIntent({
         url: SYNC_SERVICE_URL
     });
     
-    intent.putExtra('interval', 60 * 2000);
+    intent.putExtra('interval', 60 * 20000);
     Titanium.Android.startService(intent);
 	
 	visible = true;
